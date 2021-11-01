@@ -26,11 +26,11 @@ int main(int argc, char **argv) {
 
 void realMain(int argc, char **argv) {
   if (argc < 2 || argc > 2) {
-    throw "Incorrect number of flags\n";
+    throw std::string("Incorrect number of flags\n");
   }
   std::ifstream inputF(argv[1], std::ifstream::in);
   if (inputF.fail()) {
-    throw "The file could not be opened: " + std::string(argv[1]) + '\n';
+    throw std::string("The file could not be opened: " + std::string(argv[1]) + '\n');
   }
   TM TM_ = loadConfig(inputF);
   inputF.close();
@@ -74,12 +74,12 @@ TM loadConfig(std::ifstream& inputF) {
   }
   for (const std::string& symbol : initialAlphabet) {
     if (!tapeAlphabet.contains(symbol)) {
-      throw symbol + " doesn't belong to this automaton.\n";
+      throw std::string(symbol + " doesn't belong to this automaton.\n");
     }
   }
   initialState = readLine(inputF, "Initial state");
   if (!states.contains(initialState)) {
-    throw initialState + " don't belong to the states set";
+    throw std::string(initialState + " don't belong to the states set");
   }
   blankSymbol = readLine(inputF, "Blank symbol");
   std::stringstream finalStatesS(readLine(inputF, "States"));
@@ -110,7 +110,7 @@ TM loadConfig(std::ifstream& inputF) {
     } else if (movementS == "L") {
       movement = movements_::L;
     } else {
-      throw movementS + " is not a valid movement\n";
+      throw std::string(movementS + " is not a valid movement\n");
     }
     transitions.insert(Transition(transitionID++, currentState, newState, 
     readSymbol, writeSymbol, movement));
@@ -126,7 +126,7 @@ std::string readLine(std::ifstream& inputF, const std::string& whatToExpect) {
     error = !std::getline(inputF, line);
   } while (line[0] == '#' && !error); // If line is a comment read next
   if (error) {
-    throw whatToExpect + " line is missing or is in a incorrect position in the input file.\n";
+    throw std::string(whatToExpect + " line is missing or is in a incorrect position in the input file.\n");
   }
   return line;
 }
