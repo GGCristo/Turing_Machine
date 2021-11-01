@@ -1,0 +1,17 @@
+# Mismo numero de as que de bes, estando todas las as a la izquierda de las bes
+q0 q1 q2 q3 qf qm
+a b
+a b .
+q0
+.
+qf
+q0 a q1 . R
+q1 a q1 a R
+q1 b q1 b R
+q1 . q2 . L
+q2 b q3 . L
+q3 b q3 b L
+q3 a q3 a L
+q3 . qf . R
+qf a q1 . R
+qf b qm b R

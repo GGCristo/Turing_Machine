@@ -10,7 +10,7 @@ Tape::Tape(const std::unordered_set<std::string>& tapeAlphabet, const std::strin
   blankSymbol_ = blankSymbol;
 }
 
-void Tape::setString(std::string content) {
+void Tape::set(std::string content) {
   tape_.clear();
   head_ = 0;
   while (!content.empty()) {
@@ -59,7 +59,6 @@ std::string Tape::getBlankSymbol() const {
 }
 
 std::ostream& Tape::showTapeAlphabet(std::ostream& os) const {
-  os << "\n3. Tape alphabet\n\t";
   const char *padding = "";
   for (const auto& character : tapeAlphabet_) {
     os << padding << character;
@@ -83,5 +82,6 @@ std::ostream& Tape::showTape(std::ostream& os) const {
     os << "   ";
   }
   os << "|\n";
+  os << "Head: " << head_ + 1 << " element; Head value: " << tape_[head_] << '\n';
   return os;
 }

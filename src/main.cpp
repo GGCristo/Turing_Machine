@@ -47,9 +47,9 @@ void realMain(int argc, char **argv) {
     std::cout << "Introduce a string: ";
     std::cin >> string;
     if (TM_.run(string)) {
-      std::cout << "It belongs to the language\n";
+      std::cout << "Accepted\n";
     } else {
-      std::cout << "Does not belongs to the language\n";
+      std::cout << "Rejected\n";
     }
   }
 }

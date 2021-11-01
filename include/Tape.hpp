@@ -19,7 +19,7 @@ class Tape {
   public:
   Tape();
   Tape(const std::unordered_set<std::string>& tapeAlphabetS, const std::string& blankSymbol);
-  void setString(std::string content);
+  void set(std::string content);
   void transit(const std::string& writeSymbol, movements_ movement);
   std::string getHeadValue() const;
   std::string getBlankSymbol() const;

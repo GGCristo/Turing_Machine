@@ -4,7 +4,7 @@
 std::string readLine(std::ifstream& inputF, const std::string& whatToExpect) {
   std::string line;
   bool error;
-  do { // TODO explore error
+  do {
     line.clear();
     error = !std::getline(inputF, line);
   } while (line[0] == '#' && !error); // If line is a comment read next
@@ -29,8 +29,17 @@ TM::TM(std::ifstream& inputF) {
   while (tapeAlphabetS >> word) {
     tapeAlphabet.emplace(word);
   }
+  for (const std::string& symbol : initialAlphabet_) {
+    if (!tapeAlphabet.contains(symbol)) {
+      throw symbol + " doesn't belong to this automaton.\n";
+    }
+  }
   initialState_ = readLine(inputF, "Initial state");
-  tape_ = Tape(tapeAlphabet, readLine(inputF, "Blank symbol"));
+  if (!states_.contains(initialState_)) {
+      throw initialState_ + " don't belong to the states set";
+  }
+  std::string blankSymbol = readLine(inputF, "Blank symbol");
+  tape_ = Tape(tapeAlphabet, blankSymbol);
   std::stringstream finalStatesS(readLine(inputF, "States"));
   while (finalStatesS >> word) {
     finalStates_.emplace(word);
@@ -68,7 +77,7 @@ TM::TM(std::ifstream& inputF) {
 }
 
 bool TM::run(const std::string& tape) {
-  tape_.setString(tape);
+  tape_.set(tape);
   Transition* transition = transitions_.find(state_, tape_.getHeadValue());
   while(transition) {
     state_ = transition->getNewState();
@@ -77,14 +86,7 @@ bool TM::run(const std::string& tape) {
     transition = transitions_.find(state_, tape_.getHeadValue());
   }
   tape_.showTape(std::cout);
-  return isInFinalState();
-}
-
-bool TM::isInFinalState() const {
-  if (finalStates_.find(state_) != finalStates_.end()) {
-    return true;
-  }
-  return false;
+  return finalStates_.contains(state_);
 }
 
 std::ostream& TM::show(std::ostream& os) {
@@ -101,6 +103,7 @@ std::ostream& TM::show(std::ostream& os) {
     os << padding << character;
     padding = ", ";
   }
+  os << "\n3. Tape alphabet\n\t";
   tape_.showTapeAlphabet(os);
   os << "\n4. InitialState: " << initialState_;
   os << "\n5. Blank symbole: " << tape_.getBlankSymbol();

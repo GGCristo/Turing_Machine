@@ -20,7 +20,6 @@ class TM {
   Tape tape_;
   std::string state_;
   std::string getSymbol(const std::string& tape) const;
-  bool isInFinalState() const; 
 
   public:
   explicit TM(std::ifstream& inputF);

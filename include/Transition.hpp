@@ -8,6 +8,7 @@
 #include <ostream>
 
 enum class movements_{L, R};
+
 //{oldstate, currentSymbol};
 typedef std::pair<std::string, std::string> transitInput;
 
