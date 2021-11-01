@@ -5,6 +5,7 @@ project(APf)
 set(SOURCES
   src/TM.cpp
   src/Transition.cpp
+  src/Tape.cpp
 )
 
 set(CMAKE_CXX_FLAGS "-O2")

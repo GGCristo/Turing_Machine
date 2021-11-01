@@ -1,5 +1,6 @@
 #include "../include/TM.hpp"
 
+#include <iostream>
 std::string readLine(std::ifstream& inputF, const std::string& whatToExpect) {
   std::string line;
   bool error;
@@ -24,11 +25,12 @@ TM::TM(std::ifstream& inputF) {
     initialAlphabet_.emplace(word);
   }
   std::stringstream tapeAlphabetS(readLine(inputF, "Initial alphabet"));
+  std::unordered_set<std::string> tapeAlphabet;
   while (tapeAlphabetS >> word) {
-    tapeAlphabet_.emplace(word);
+    tapeAlphabet.emplace(word);
   }
   initialState_ = readLine(inputF, "Initial state");
-  blankSymbol_ = readLine(inputF, "Blank symbol");
+  tape_ = Tape(tapeAlphabet, readLine(inputF, "Blank symbol"));
   std::stringstream finalStatesS(readLine(inputF, "States"));
   while (finalStatesS >> word) {
     finalStates_.emplace(word);
@@ -62,6 +64,27 @@ TM::TM(std::ifstream& inputF) {
     transitions_.insert(Transition(transitionID++, currentState, newState, 
     readSymbol, writeSymbol, movement));
   }
+  state_ = initialState_;
+}
+
+bool TM::run(const std::string& tape) {
+  tape_.setString(tape);
+  Transition* transition = transitions_.find(state_, tape_.getHeadValue());
+  while(transition) {
+    state_ = transition->getNewState();
+    tape_.transit(transition->getWriteSymbol(), transition->getMovement());
+    delete transition;
+    transition = transitions_.find(state_, tape_.getHeadValue());
+  }
+  tape_.showTape(std::cout);
+  return isInFinalState();
+}
+
+bool TM::isInFinalState() const {
+  if (finalStates_.find(state_) != finalStates_.end()) {
+    return true;
+  }
+  return false;
 }
 
 std::ostream& TM::show(std::ostream& os) {
@@ -78,14 +101,9 @@ std::ostream& TM::show(std::ostream& os) {
     os << padding << character;
     padding = ", ";
   }
-  padding = "";
-  os << "\n3. Tape alphabet\n\t";
-  for (const auto& character : tapeAlphabet_) {
-    os << padding << character;
-    padding = ", ";
-  }
+  tape_.showTapeAlphabet(os);
   os << "\n4. InitialState: " << initialState_;
-  os << "\n5. Blank symbole: " << blankSymbol_;
+  os << "\n5. Blank symbole: " << tape_.getBlankSymbol();
   os << "\n6. Transitions\n";
   transitions_.show(os);
   padding = "";

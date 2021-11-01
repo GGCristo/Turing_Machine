@@ -46,10 +46,10 @@ void realMain(int argc, char **argv) {
   for (int i = 0; i < numberOfStrings; i++) {
     std::cout << "Introduce a string: ";
     std::cin >> string;
-    /* if (Apf_.run(string)) { */
-    /*   std::cout << "It belongs to the language\n"; */
-    /* } else { */
-    /*   std::cout << "Does not belongs to the language\n"; */
-    /* } */
+    if (TM_.run(string)) {
+      std::cout << "It belongs to the language\n";
+    } else {
+      std::cout << "Does not belongs to the language\n";
+    }
   }
 }

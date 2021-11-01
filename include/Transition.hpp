@@ -4,13 +4,12 @@
 #include <string>
 #include <vector>
 #include <map>
-#include <tuple>
+#include <utility>
 #include <ostream>
-#include <queue>
 
 enum class movements_{L, R};
 //{oldstate, currentSymbol};
-typedef std::tuple<std::string, std::string> transitInput;
+typedef std::pair<std::string, std::string> transitInput;
 
 // {newState, symbolToConsume, movement}
 /* typedef std::tuple<std::string, std::string, movements_::{L, R}> transitOutput; */
@@ -26,8 +25,12 @@ class Transition {
   public:
   Transition(size_t ID, std::string initialState, std::string resultingState,
   std::string readSymbol, std::string writeSymbol, movements_ movement);
+  Transition(const Transition& other);
   std::string getOldState() const;
+  std::string getNewState() const;
   std::string getReadSymbol() const;
+  std::string getWriteSymbol() const;
+  movements_ getMovement() const;
   std::ostream& show(std::ostream& os) const;
 };
 
@@ -36,6 +39,6 @@ class TransitionMap {
   std::map<transitInput, Transition> transitionMap_;
   public:
   void insert(const Transition& Transition);
-  std::queue<Transition> find(const std::string& state, const std::string& readSymbol) const;
+  Transition* find(const std::string& state, const std::string& readSymbol) const;
   std::ostream& show(std::ostream& os) const;
 };

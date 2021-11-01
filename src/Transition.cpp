@@ -1,5 +1,6 @@
 #include "../include/Transition.hpp"
 
+#include <iostream>
 Transition::Transition(size_t id, std::string initialState, std::string resultingState,
 std::string readSymbol, std::string writeSymbol, movements_ movement) :
 initialState_(std::move(initialState)), resultingState_(std::move(resultingState)),
@@ -8,12 +9,28 @@ readSymbol_(std::move(readSymbol)), writeSymbol_(std::move(writeSymbol)) {
   movement_ = movement;
 }
 
+Transition::Transition(const Transition& other) {
+  *this = other;
+}
+
 std::string Transition::getOldState() const {
   return initialState_;
 }
 
+std::string Transition::getNewState() const { // TODO change name
+  return resultingState_;
+}
+
+std::string Transition::getWriteSymbol() const { // TODO change name
+  return writeSymbol_;
+}
+
 std::string Transition::getReadSymbol() const {
   return readSymbol_;
+}
+
+movements_ Transition::getMovement() const {
+  return movement_;
 }
 
 std::ostream& Transition::show(std::ostream& os) const {
@@ -30,19 +47,18 @@ std::ostream& Transition::show(std::ostream& os) const {
 ////////////////////////////////////////////////////////////////////////////
 
 void TransitionMap::insert(const Transition& transition) {
-  transitionMap_.emplace(std::make_tuple(transition.getOldState(),
+  transitionMap_.emplace(std::make_pair(transition.getOldState(),
   transition.getReadSymbol()), transition);
 }
 
-std::queue<Transition> TransitionMap::find(const std::string& state,
+// You should free Transition* if is not null
+Transition* TransitionMap::find(const std::string& state,
 const std::string& readSymbol) const {
-  auto tuple = std::make_tuple(state, readSymbol);
-  auto range = transitionMap_.equal_range(tuple);
-  std::queue<Transition> posiblesTransitions;
-  for (auto it = range.first; it != range.second; it++) {
-    posiblesTransitions.push(it->second);
+  auto transitionIt = transitionMap_.find(std::make_pair(state, readSymbol));
+  if (transitionIt != transitionMap_.end()) {
+      return new Transition(transitionIt->second);
   }
-  return posiblesTransitions;
+  return nullptr;
 }
 
 std::ostream& TransitionMap::show(std::ostream& os) const {

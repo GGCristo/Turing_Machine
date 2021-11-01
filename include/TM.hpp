@@ -1,6 +1,5 @@
 #pragma once
 
-#include <deque>
 #include <fstream>
 #include <ostream>
 #include <sstream>
@@ -8,20 +7,24 @@
 #include <unordered_set>
 
 #include "../include/Transition.hpp"
+#include "../include/Tape.hpp"
 
 class TM {
   private:
   std::unordered_set<std::string> states_;
   std::unordered_set<std::string> initialAlphabet_;
-  std::unordered_set<std::string> tapeAlphabet_;
   std::string initialState_;
-  std::string blankSymbol_;
   std::unordered_set<std::string> finalStates_;
   TransitionMap transitions_;
 
-  std::deque<std::string> tape_;
+  Tape tape_;
+  std::string state_;
+  std::string getSymbol(const std::string& tape) const;
+  bool isInFinalState() const; 
+
   public:
   explicit TM(std::ifstream& inputF);
+  bool run(const std::string& tape);
   std::ostream& show(std::ostream& os);
 };
 
