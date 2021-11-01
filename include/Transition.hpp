@@ -23,7 +23,6 @@ class Transition {
   public:
   Transition(size_t ID, std::string initialState, std::string resultingState,
   std::string readSymbol, std::string writeSymbol, movements_ movement);
-  Transition(const Transition& other);
   std::string getOldState() const;
   std::string getNewState() const;
   std::string getReadSymbol() const;

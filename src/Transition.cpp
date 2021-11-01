@@ -8,10 +8,6 @@ readSymbol_(std::move(readSymbol)), writeSymbol_(std::move(writeSymbol)) {
   movement_ = movement;
 }
 
-Transition::Transition(const Transition& other) {
-  *this = other;
-}
-
 std::string Transition::getOldState() const {
   return initialState_;
 }

@@ -25,14 +25,8 @@ int main(int argc, char **argv) {
 }
 
 void realMain(int argc, char **argv) {
-  if (argc < 2 || argc > 3) {
+  if (argc < 2 || argc > 2) {
     throw "Incorrect number of flags\n";
-  }
-  if (argc == 3) {
-    if (std::string("--trace") == argv[2]) {
-    } else {
-      throw "Incorrect argument: " + std::string(argv[2]) + '\n';
-    }
   }
   std::ifstream inputF(argv[1], std::ifstream::in);
   if (inputF.fail()) {
@@ -85,7 +79,7 @@ TM loadConfig(std::ifstream& inputF) {
   }
   initialState = readLine(inputF, "Initial state");
   if (!states.contains(initialState)) {
-      throw initialState + " don't belong to the states set";
+    throw initialState + " don't belong to the states set";
   }
   blankSymbol = readLine(inputF, "Blank symbol");
   std::stringstream finalStatesS(readLine(inputF, "States"));
