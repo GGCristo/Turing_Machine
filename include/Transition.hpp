@@ -1,8 +1,5 @@
 #pragma once
-#include <cwchar>
-#include <sstream>
 #include <string>
-#include <vector>
 #include <map>
 #include <utility>
 #include <ostream>

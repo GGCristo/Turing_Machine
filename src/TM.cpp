@@ -1,79 +1,14 @@
 #include "../include/TM.hpp"
 
-#include <iostream>
-std::string readLine(std::ifstream& inputF, const std::string& whatToExpect) {
-  std::string line;
-  bool error;
-  do {
-    line.clear();
-    error = !std::getline(inputF, line);
-  } while (line[0] == '#' && !error); // If line is a comment read next
-  if (error) {
-    throw whatToExpect + " line is missing or is in a incorrect position in the input file.\n";
-  }
-  return line;
-}
-
-TM::TM(std::ifstream& inputF) {
-  std::stringstream statesS(readLine(inputF, "States"));
-  std::string word;
-  while (statesS >> word) {
-    states_.emplace(word);
-  }
-  std::stringstream initialAlphabetS(readLine(inputF, "Initial alphabet"));
-  while (initialAlphabetS >> word) {
-    initialAlphabet_.emplace(word);
-  }
-  std::stringstream tapeAlphabetS(readLine(inputF, "Initial alphabet"));
-  std::unordered_set<std::string> tapeAlphabet;
-  while (tapeAlphabetS >> word) {
-    tapeAlphabet.emplace(word);
-  }
-  for (const std::string& symbol : initialAlphabet_) {
-    if (!tapeAlphabet.contains(symbol)) {
-      throw symbol + " doesn't belong to this automaton.\n";
-    }
-  }
-  initialState_ = readLine(inputF, "Initial state");
-  if (!states_.contains(initialState_)) {
-      throw initialState_ + " don't belong to the states set";
-  }
-  std::string blankSymbol = readLine(inputF, "Blank symbol");
-  tape_ = Tape(tapeAlphabet, blankSymbol);
-  std::stringstream finalStatesS(readLine(inputF, "States"));
-  while (finalStatesS >> word) {
-    finalStates_.emplace(word);
-  }
-  // Transitions
-  std::string transitionLineS;
-  int transitionID = 1;
-  while (std::getline(inputF, transitionLineS)) {
-    if (transitionLineS.empty() || transitionLineS[0] == '#') {
-      continue;
-    }
-    std::stringstream transitionLineSS(transitionLineS);
-    std::string currentState;
-    transitionLineSS >> currentState;
-    std::string readSymbol;
-    transitionLineSS >> readSymbol;
-    std::string newState;
-    transitionLineSS >> newState;
-    std::string writeSymbol;
-    transitionLineSS >> writeSymbol;
-    std::string movementS;
-    transitionLineSS >> movementS;
-    movements_ movement;
-    if (movementS == "R") {
-      movement = movements_::R;
-    } else if (movementS == "L") {
-      movement = movements_::L;
-    } else {
-      throw movementS + " is not a valid movement\n";
-    }
-    transitions_.insert(Transition(transitionID++, currentState, newState, 
-    readSymbol, writeSymbol, movement));
-  }
+TM::TM(const sepTuplet& tuple) : 
+states_(tuple.states_), 
+initialAlphabet_(tuple.initialAlphabet_),
+initialState_(tuple.initialState_), 
+finalStates_(tuple.finalStates_), 
+transitions_(tuple.transitions_),
+tape_(tuple.tapeAlphabet_, tuple.blankSymbol_) {
   state_ = initialState_;
+  // TODO checks
 }
 
 bool TM::run(const std::string& tape) {

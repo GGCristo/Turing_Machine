@@ -1,6 +1,5 @@
 #include "../include/Transition.hpp"
 
-#include <iostream>
 Transition::Transition(size_t id, std::string initialState, std::string resultingState,
 std::string readSymbol, std::string writeSymbol, movements_ movement) :
 initialState_(std::move(initialState)), resultingState_(std::move(resultingState)),

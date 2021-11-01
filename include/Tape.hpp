@@ -6,6 +6,8 @@
 #include <ostream>
 #include <sstream>
 
+#include <iostream>
+
 #include "Transition.hpp"
 
 class Tape {
@@ -15,14 +17,14 @@ class Tape {
   int head_;
   std::string blankSymbol_;
 
-  std::string getSymbol(std::string& tape) const;
+  std::string getSymbol(const std::string& tape) const;
+  void reformat();
   public:
-  Tape();
-  Tape(const std::unordered_set<std::string>& tapeAlphabetS, const std::string& blankSymbol);
+  Tape(std::unordered_set<std::string> tapeAlphabetS, std::string blankSymbol);
   void set(std::string content);
   void transit(const std::string& writeSymbol, movements_ movement);
   std::string getHeadValue() const;
   std::string getBlankSymbol() const;
   std::ostream& showTapeAlphabet(std::ostream& os) const;
-  std::ostream& showTape(std::ostream& os) const;
+  std::ostream& showTape(std::ostream& os);
 };

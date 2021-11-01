@@ -1,13 +1,8 @@
 #include "../include/Tape.hpp"
-#include <iostream>
 
-Tape::Tape() {
-// Invalid
-}
-
-Tape::Tape(const std::unordered_set<std::string>& tapeAlphabet, const std::string& blankSymbol) {
-  tapeAlphabet_ = tapeAlphabet;
-  blankSymbol_ = blankSymbol;
+Tape::Tape(std::unordered_set<std::string> tapeAlphabet, std::string blankSymbol) :
+  tapeAlphabet_(std::move(tapeAlphabet)), blankSymbol_(std::move(blankSymbol)) {
+  head_ = 0;
 }
 
 void Tape::set(std::string content) {
@@ -16,7 +11,7 @@ void Tape::set(std::string content) {
   while (!content.empty()) {
     std::string symbol = getSymbol(content);
     tape_.push_back(symbol);
-    content.erase(content.begin(), content.begin() + symbol.size());
+    content.erase(content.begin(), content.begin() + int(symbol.size()));
   }
 }
 
@@ -37,12 +32,29 @@ void Tape::transit(const std::string& writeSymbol, movements_ movement) {
     } else {
       head_--;
     }
-  } else {
-    std::cout << "Error\n"; // TODO Improve this
   }
 }
 
-std::string Tape::getSymbol(std::string& tape) const {
+/**
+ * @brief reformat() reformat the tape to has the following form: 
+ * <blankSymbol>[Tape]<blankSymbol> being [Tape] the tape with no blank symbols 
+ * at the ends
+ */
+void Tape::reformat() {
+  std::size_t nearestBlankSymbolPos = 0;
+  while (tape_[nearestBlankSymbolPos] == blankSymbol_) {
+    nearestBlankSymbolPos++;
+  }
+  nearestBlankSymbolPos--;
+  int pop = 0;
+  for (; pop < nearestBlankSymbolPos && pop < head_ - 1; pop++) {
+    tape_.pop_front();
+  }
+  head_ -= pop;
+  // TODO right side
+}
+
+std::string Tape::getSymbol(const std::string& tape) const {
   std::string symbol;
   for (char c : tape) {
     symbol += c;
@@ -67,7 +79,8 @@ std::ostream& Tape::showTapeAlphabet(std::ostream& os) const {
   return os;
 }
 
-std::ostream& Tape::showTape(std::ostream& os) const {
+std::ostream& Tape::showTape(std::ostream& os) {
+  reformat();
   const char *padding = "";
   for (const auto& symbol : tape_) {
     os << padding << symbol;
