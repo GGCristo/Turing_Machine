@@ -72,15 +72,7 @@ TM loadConfig(std::ifstream& inputF) {
   while (tapeAlphabetS >> word) {
     tapeAlphabet.emplace(word);
   }
-  for (const std::string& symbol : initialAlphabet) {
-    if (!tapeAlphabet.contains(symbol)) {
-      throw std::string(symbol + " doesn't belong to this automaton.\n");
-    }
-  }
   initialState = readLine(inputF, "Initial state");
-  if (!states.contains(initialState)) {
-    throw std::string(initialState + " don't belong to the states set");
-  }
   blankSymbol = readLine(inputF, "Blank symbol");
   std::stringstream finalStatesS(readLine(inputF, "States"));
   while (finalStatesS >> word) {

@@ -23,6 +23,7 @@ class Transition {
   public:
   Transition(size_t ID, std::string initialState, std::string resultingState,
   std::string readSymbol, std::string writeSymbol, movements_ movement);
+  size_t getID() const;
   std::string getOldState() const;
   std::string getNewState() const;
   std::string getReadSymbol() const;
@@ -36,6 +37,7 @@ class TransitionMap {
   std::map<transitInput, Transition> transitionMap_;
   public:
   void insert(const Transition& Transition);
+  std::map<transitInput, Transition> getTransitions() const;
   Transition* find(const std::string& state, const std::string& readSymbol) const;
   std::ostream& show(std::ostream& os) const;
 };

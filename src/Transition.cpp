@@ -8,6 +8,10 @@ readSymbol_(std::move(readSymbol)), writeSymbol_(std::move(writeSymbol)) {
   movement_ = movement;
 }
 
+size_t Transition::getID() const {
+  return id_;
+}
+
 std::string Transition::getOldState() const {
   return initialState_;
 }
@@ -54,6 +58,10 @@ const std::string& readSymbol) const {
       return new Transition(transitionIt->second);
   }
   return nullptr;
+}
+
+std::map<transitInput, Transition> TransitionMap::getTransitions() const {
+  return transitionMap_;
 }
 
 std::ostream& TransitionMap::show(std::ostream& os) const {

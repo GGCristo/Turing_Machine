@@ -1,4 +1,5 @@
 #include "../include/TM.hpp"
+#include <string>
 
 TM::TM(const sepTuplet& tuple) : 
 states_(tuple.states_), 
@@ -7,8 +8,51 @@ initialState_(tuple.initialState_),
 finalStates_(tuple.finalStates_), 
 transitions_(tuple.transitions_),
 tape_(tuple.tapeAlphabet_, tuple.blankSymbol_) {
+  // Checks tape alphabet
+  for (const std::string& symbol : initialAlphabet_) {
+    if (!tape_.getAlphabet_().contains(symbol)) {
+      throw std::string(symbol + " doesn't belong to this automaton.\n");
+    }
+  }
+  // Checks initial state
+  if (!states_.contains(initialState_)) {
+    throw std::string(initialState_ + " don't belong to the states set");
+  }
+  // Checks blank symbol
+  if (!tape_.getAlphabet_().contains(tape_.getBlankSymbol()) ||
+    initialAlphabet_.contains(tape_.getBlankSymbol())) {
+    throw std::string("Blank symbol is not in the correct set");
+  }
+  // Check final states
+  for (const auto& finalState : finalStates_) {
+    if (!finalStates_.contains(finalState)) {
+      throw std::string(finalState + " is not a final State");
+    }
+  }
+  // Check Transitions
+  for (const auto& transition : transitions_.getTransitions()) {
+    if (!states_.contains(transition.second.getOldState())) {
+        throw std::string("Old state: " + transition.second.getOldState() + 
+        " from transition number " + std::to_string(transition.second.getID()) + 
+        " is not a valid state");
+    }
+    if (!states_.contains(transition.second.getNewState())) {
+        throw std::string("New state: " + transition.second.getNewState() + 
+        " from transition number " + std::to_string(transition.second.getID()) + 
+        " is not a valid state");
+    }
+    if (!tape_.getAlphabet_().contains(transition.second.getReadSymbol())) {
+        throw std::string("Read symbol" + transition.second.getReadSymbol() + 
+        " from transition number " + std::to_string(transition.second.getID()) + 
+        " is not a valid symbol");
+    }
+    if (!tape_.getAlphabet_().contains(transition.second.getWriteSymbol())) {
+        throw std::string("Write symbol" + transition.second.getWriteSymbol() + 
+        " from transition number " + std::to_string(transition.second.getID()) + 
+        " is not a valid symbol");
+    }
+  }
   state_ = initialState_;
-  // TODO checks
 }
 
 bool TM::run(const std::string& tape) {

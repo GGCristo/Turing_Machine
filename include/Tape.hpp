@@ -12,7 +12,7 @@
 
 class Tape {
   private:
-  std::unordered_set<std::string> tapeAlphabet_;
+  std::unordered_set<std::string> alphabet_;
   std::deque<std::string> tape_;
   int head_;
   std::string blankSymbol_;
@@ -25,6 +25,7 @@ class Tape {
   void transit(const std::string& writeSymbol, movements_ movement);
   std::string getHeadValue() const;
   std::string getBlankSymbol() const;
+  std::unordered_set<std::string> getAlphabet_() const;
   std::ostream& showTapeAlphabet(std::ostream& os) const;
   std::ostream& showTape(std::ostream& os);
 };

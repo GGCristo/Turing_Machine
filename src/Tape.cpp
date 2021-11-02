@@ -1,7 +1,7 @@
 #include "../include/Tape.hpp"
 
 Tape::Tape(std::unordered_set<std::string> tapeAlphabet, std::string blankSymbol) :
-  tapeAlphabet_(std::move(tapeAlphabet)), blankSymbol_(std::move(blankSymbol)) {
+  alphabet_(std::move(tapeAlphabet)), blankSymbol_(std::move(blankSymbol)) {
   head_ = 0;
 }
 
@@ -67,12 +67,16 @@ std::string Tape::getSymbol(const std::string& tape) const {
   std::string symbol;
   for (char c : tape) {
     symbol += c;
-    if (tapeAlphabet_.find(symbol) == tapeAlphabet_.end()) {
+    if (alphabet_.find(symbol) == alphabet_.end()) {
       symbol.pop_back();
       return symbol;
     }
   }
   return symbol;
+}
+
+std::unordered_set<std::string> Tape::getAlphabet_() const {
+  return alphabet_;
 }
 
 std::string Tape::getBlankSymbol() const {
@@ -81,7 +85,7 @@ std::string Tape::getBlankSymbol() const {
 
 std::ostream& Tape::showTapeAlphabet(std::ostream& os) const {
   const char *padding = "";
-  for (const auto& character : tapeAlphabet_) {
+  for (const auto& character : alphabet_) {
     os << padding << character;
     padding = ", ";
   }
