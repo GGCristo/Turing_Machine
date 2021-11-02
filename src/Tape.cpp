@@ -42,7 +42,7 @@ void Tape::transit(const std::string& writeSymbol, movements_ movement) {
  */
 void Tape::reformat() {
   std::size_t nearestBlankSymbolPos = 0;
-  while (tape_[nearestBlankSymbolPos] == blankSymbol_) {
+  while (nearestBlankSymbolPos < tape_.size() - 1 && tape_[nearestBlankSymbolPos] == blankSymbol_) {
     nearestBlankSymbolPos++;
   }
   nearestBlankSymbolPos--;
@@ -51,7 +51,16 @@ void Tape::reformat() {
     tape_.pop_front();
   }
   head_ -= pop;
-  // TODO right side
+  nearestBlankSymbolPos = tape_.size() - 1;
+  while (nearestBlankSymbolPos > 0 && tape_[nearestBlankSymbolPos] == blankSymbol_) {
+    nearestBlankSymbolPos--;
+  }
+  if (nearestBlankSymbolPos == tape_.size() - 1) {
+    tape_.push_back(blankSymbol_);
+    return;
+  }
+  nearestBlankSymbolPos++;
+  // TODO pop_back
 }
 
 std::string Tape::getSymbol(const std::string& tape) const {
